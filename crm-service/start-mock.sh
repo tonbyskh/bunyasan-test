@@ -1,0 +1,1 @@
+./gradlew bootrun --args='--spring.profiles.active=mock-service'

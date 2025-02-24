@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant FrontEnd as Client (Bank staff / Call Center)
+    participant CRM as CRM Microservice
+    participant CustomerService as Customer Service
+    participant BankAccountService as Bank Account Service
+    participant BackendOfficeService as Backend Office Service
+    participant Database as Database
+    FrontEnd ->> CRM: Get customer data by phone number
+    CRM ->> CustomerService: Get customer data by customerId
+    CustomerService ->> Database: Query customer by CustomerService
+    Database ->> CustomerService: Return customer info
+    CustomerService ->> CRM: Return customer info
+    CRM ->> FrontEnd: Send customer info to front-end
+
+    alt Get customer bank account list, bank account detail, transaction history
+        Front ->> CRM: Create customer request
+        CRM ->> BankAccountService: Get bank account list, bank account detail, transaction history
+        BankAccountService ->> CRM: Return bank account list, bank account detail, transaction history
+        CRM ->> CRM: Update customer request status
+        CRM ->> FrontEnd: Send status response data
+    end
+
+    alt Forward customer request type to backend office
+        Front ->> CRM: Create customer request type OTHER
+        CRM ->> BackendOfficeService: Send customer request id to backend office
+        BackendOfficeService ->> CRM: Update status when success
+        CRM ->> FrontEnd: Send status response data
+    end
+
+
